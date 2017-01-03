@@ -1,0 +1,121 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "AWS CloudFormation Sample Template for Creating Role",
+
+  "Parameters" : {
+
+    "DevRoleName": {
+      "Description" : "Name of the Developer IAM Role",
+      "Type": "String",
+      "ConstraintDescription" : "must be the name of IAM Role to be created."
+    },
+    "AdminRoleName": {
+      "Description" : "Name of the Admin IAM Role",
+      "Type": "String",
+      "ConstraintDescription" : "must be the name of IAM Role to be created."
+    },
+
+    "InstanceRoleName": {
+      "Description" : "Name of the Instance IAM Role",
+      "Type": "String",
+      "ConstraintDescription" : "must be the name of IAM Role to be created."
+    },
+    
+  },
+
+   "Resources": {
+      "DevRole": {
+         "Type": "AWS::IAM::Role",
+         "Properties": {
+            "AssumeRolePolicyDocument": {
+               "Version": "2012-10-17",
+               "Statement": [
+                 {
+                   "Effect": "Allow",
+                   "Principal": {
+                     "AWS": { "Fn::Join": ["", [ "arn:aws:iam::", { "Ref" : "AWS::AccountId" }, ":root"] ] }
+                   },
+                   "Action": "sts:AssumeRole",
+                   "Condition": {
+                     "Bool": {
+                       "aws:MultiFactorAuthPresent": "true"
+                     }
+                   }
+                 }
+               ]
+            },
+            "RoleName": { "Ref": "DevRoleName" },
+            "Path": "/",
+            "ManagedPolicyArns": [
+
+              "arn:aws:iam::aws:policy/ReadOnlyAccess" 
+
+            ]
+
+            }
+      },
+
+      "AdminRole": {
+         "Type": "AWS::IAM::Role",
+         "Properties": {
+            "AssumeRolePolicyDocument": {
+               "Version": "2012-10-17",
+               "Statement": [
+                 {
+                   "Effect": "Allow",
+                   "Principal": {
+                     "AWS": { "Fn::Join": ["", [ "arn:aws:iam::", { "Ref" : "AWS::AccountId" }, ":root"] ] }
+                   },
+                   "Action": "sts:AssumeRole",
+                   "Condition": {
+                     "Bool": {
+                       "aws:MultiFactorAuthPresent": "false"
+                     }
+                   }
+                 }
+               ]
+            },
+            "RoleName": { "Ref": "AdminRoleName" },
+            "Path": "/",
+            "ManagedPolicyArns": [
+
+               "arn:aws:iam::aws:policy/AdministratorAccess"
+            ],
+            }
+      },
+
+      "InstanceRole": {
+         "Type": "AWS::IAM::Role",
+         "Properties": {
+            "AssumeRolePolicyDocument": {
+               "Version": "2012-10-17",
+               "Statement": [
+                 {
+                   "Effect": "Allow",
+                   "Principal": {
+                     "AWS": { "Fn::Join": ["", [ "arn:aws:iam::", { "Ref" : "AWS::AccountId" }, ":root"] ] }
+                   },
+                   "Action": "sts:AssumeRole",
+                   "Condition": {
+                     "Bool": {
+                       "aws:MultiFactorAuthPresent": "false"
+                     }
+                   }
+                 }
+               ]
+            },
+
+            "RoleName": { "Ref": "InstanceRoleName" },
+            "Path": "/",
+            "ManagedPolicyArns": [
+
+               "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
+               "arn:aws:iam::aws:policy/ReadOnlyAccess"
+            ]
+
+            }
+      },
+   }
+
+}
