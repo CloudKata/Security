@@ -70,7 +70,7 @@
                    "Action": "sts:AssumeRole",
                    "Condition": {
                      "Bool": {
-                       "aws:MultiFactorAuthPresent": "false"
+                       "aws:MultiFactorAuthPresent": "true"
                      }
                    }
                  }
@@ -94,28 +94,28 @@
                  {
                    "Effect": "Allow",
                    "Principal": {
-                     "AWS": { "Fn::Join": ["", [ "arn:aws:iam::", { "Ref" : "AWS::AccountId" }, ":root"] ] }
+                     "Service": [ "ec2.amazonaws.com" ]
                    },
-                   "Action": "sts:AssumeRole",
-                   "Condition": {
-                     "Bool": {
-                       "aws:MultiFactorAuthPresent": "false"
-                     }
-                   }
+                   "Action": "sts:AssumeRole"
                  }
                ]
             },
-
             "RoleName": { "Ref": "InstanceRoleName" },
             "Path": "/",
             "ManagedPolicyArns": [
-
                "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
                "arn:aws:iam::aws:policy/ReadOnlyAccess"
             ]
 
             }
       },
-   }
 
+      "RootInstanceProfile": {
+         "Type": "AWS::IAM::InstanceProfile",
+         "Properties": {
+            "Path": "/",
+            "Roles": [ { "Ref": "InstanceRoleName" } ]
+         }
+      }
+   }
 }
