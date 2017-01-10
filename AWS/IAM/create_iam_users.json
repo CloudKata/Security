@@ -42,7 +42,7 @@
         "Statement" : [ {
          "Sid": "PolicyStatementToAllowUserToPassOneSpecificRole",
          "Effect" : "Allow",
-         "Action" : [ "iam:PassRole", "sts:AssumeRole", "iam:ListInstanceProfiles" ],
+         "Action" : [ "iam:PassRole", "sts:AssumeRole", "iam:ListInstanceProfiles", ],
          "Resource" : { "Fn::Join": ["", [ "arn:aws:iam::", { "Ref" : "AWS::AccountId" }, ":role/", { "Ref" : "IAMRole" } ] ] }
        },
        {
