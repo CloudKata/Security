@@ -15,6 +15,11 @@
       "Type": "String",
       "ConstraintDescription" : "must be the name of IAM Role to be created."
     },
+    "OpsRoleName": {
+      "Description" : "Name of the IAM Role for operations like Billing",
+      "Type": "String",
+      "ConstraintDescription" : "must be the name of IAM Role to be created."
+    },
 
     "InstanceRoleName": {
       "Description" : "Name of the Instance IAM Role",
@@ -27,6 +32,7 @@
    "Resources": {
       "DevRole": {
          "Type": "AWS::IAM::Role",
+         "DeletionPolicy" : "Retain",
          "Properties": {
             "AssumeRolePolicyDocument": {
                "Version": "2012-10-17",
@@ -58,6 +64,7 @@
 
       "AdminRole": {
          "Type": "AWS::IAM::Role",
+         "DeletionPolicy" : "Retain",
          "Properties": {
             "AssumeRolePolicyDocument": {
                "Version": "2012-10-17",
@@ -85,8 +92,52 @@
             }
       },
 
+      "OpsRole": {
+        "Type": "AWS::IAM::Role",
+        "DeletionPolicy" : "Retain",
+         "Properties": {
+            "AssumeRolePolicyDocument": {
+               "Version": "2012-10-17",
+               "Statement": [
+                 {
+                   "Effect": "Allow",
+                   "Principal": {
+                     "AWS": { "Fn::Join": ["", [ "arn:aws:iam::", { "Ref" : "AWS::AccountId" }, ":root"] ] }
+                   },
+                   "Action": "sts:AssumeRole",
+                   "Condition": {
+                     "Bool": {
+                       "aws:MultiFactorAuthPresent": "true"
+                     }
+                   }
+                 }
+               ]
+            },
+            "RoleName": { "Ref": "OpsRoleName" },
+            "Path": "/",
+            "Policies": [ {
+               "PolicyName": "BillingAccess",
+               "PolicyDocument": {
+                  "Version" : "2012-10-17",
+                  "Statement": [ {
+                     "Effect": "Allow",
+                     "Action": [
+                      "aws-portal:*Billing",
+                      "aws-portal:*Usage",
+                      "aws-portal:*PaymentMethods",
+                      "budgets:ViewBudget",
+                      "budgets:ModifyBudget"
+                    ],
+                     "Resource": "*"
+                  } ]
+               }
+               } ]
+            }
+          },
+
       "InstanceRole": {
          "Type": "AWS::IAM::Role",
+         "DeletionPolicy" : "Retain",
          "Properties": {
             "AssumeRolePolicyDocument": {
                "Version": "2012-10-17",

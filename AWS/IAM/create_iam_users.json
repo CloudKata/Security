@@ -20,14 +20,17 @@
 
     "IAMRole": {
       "Description": "Name of the role",
-      "Type": "String",      
-      "ConstraintDescription": "Must be a precreated IAM role"
+      "Type": "String",  
+      "Default" : "rb_role_developer",
+      "AllowedValues" : ["rb_role_developer", "rb_role_admin", "rb_role_billing"],    
+      "ConstraintDescription": "Enter roles rb_role_developer. rb_role_admin"
     }
   },
 
   "Resources" : {
-    "myuser" : {
+    "IAMUser" : {
      "Type" : "AWS::IAM::User",
+     "DeletionPolicy" : "Retain",
      "Properties" : {
       "UserName" : { "Ref" : "UserName"},
       "Path" : "/",

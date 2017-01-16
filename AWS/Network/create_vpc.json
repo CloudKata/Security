@@ -1,0 +1,241 @@
+
+{
+   "AWSTemplateFormatVersion" : "2010-09-09",
+   "Description" : "AWS CloudFormation Sample Template for Creating Role",
+
+   "Parameters" : {
+
+    "EnvPrefix" : {
+      "Description": "Environment name prefix.",
+      "Type": "String",
+      "Default": "Prod"
+    },
+
+    "VPCCIDR" : {
+      "Type" : "String",
+      "Description" : "IP Address range for the VPN connected VPC",
+      "MinLength": "9",
+      "MaxLength": "18",
+      "Default": "10.1.0.0/16",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
+    },
+
+    "PublicSubnet1Cidr": {
+      "Description": "Public subnet 1 CIDR block.",
+      "Type": "String",
+      "Default": "10.4.0.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+    },
+    "PublicSubnet1Cidr": {
+      "Description": "Private subnet 1 CIDR block.",
+      "Type": "String",
+      "Default": "10.4.1.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+    },
+    "WebSubnet1Cidr": {
+      "Description": "Public subnet 2 CIDR block.",
+      "Type": "String",
+      "Default": "10.4.10.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+    },
+    "WebSubnet2Cidr": {
+      "Description": "Private subnet 2 CIDR block.",
+      "Type": "String",
+      "Default": "10.4.11.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+    },
+      "DataSubnet1Cidr": {
+      "Description": "Public subnet 2 CIDR block.",
+      "Type": "String",
+      "Default": "10.4.10.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+    },
+    "DataSubnet2Cidr": {
+      "Description": "Private subnet 2 CIDR block.",
+      "Type": "String",
+      "Default": "10.4.11.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+    },
+      "SvcSubnet1Cidr": {
+      "Description": "Public subnet 2 CIDR block.",
+      "Type": "String",
+      "Default": "10.4.10.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+    },
+    "SvcSubnet2Cidr": {
+      "Description": "Private subnet 2 CIDR block.",
+      "Type": "String",
+      "Default": "10.4.11.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+    },
+
+    "subnet1AZ": {
+      "Description": "Subnet 1 availability zone.",
+      "Type": "AWS::EC2::AvailabilityZone::Name"
+    },
+    "subnet2AZ": {
+      "Description": "Subnet 2 availability zone.",
+      "Type": "AWS::EC2::AvailabilityZone::Name"
+},
+
+  },
+
+
+   "Resources" : {
+      "myVPC" : {
+         "Type" : "AWS::EC2::VPC",
+         "Properties" : {
+          "CidrBlock" : { "Ref" : "VPCCIDR" },
+    	    "EnableDnsSupport" : "true",
+    	    "EnableDnsHostnames" : "true",
+          "Tags" : [
+            {
+            
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "VPC"]]}
+           
+            }
+          ]
+         }
+      },
+
+      "PublicSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "DependsOn": ["vpc", "attachGateway"],
+      "Properties": {
+        "CidrBlock": {"Ref": "publicSubnet1Cidr"},
+        "AvailabilityZone": {"Ref" : "subnet1AZ"},
+        "VpcId": {"Ref": "vpc"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["-", [{"Ref" : "envPrefix"}, "Subnet-Public-1"]]}
+          }
+        ]
+      }
+    },
+    
+    "PublicSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "DependsOn": ["vpc", "attachGateway"],
+      "Properties": {
+        "CidrBlock": {"Ref": "publicSubnet2Cidr"},
+        "AvailabilityZone": {"Ref" : "subnet2AZ"},
+        "VpcId": {"Ref": "vpc"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["-", [{"Ref" : "envPrefix"}, "Subnet-Public-2"]]}
+          }
+        ]
+      }
+    },
+
+    "WebSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "DependsOn": ["vpc", "attachGateway"],
+      "Properties": {
+        "CidrBlock": {"Ref": "privateSubnet1Cidr"},
+        "AvailabilityZone": {"Ref" : "subnet1AZ"},
+        "VpcId": {"Ref": "vpc"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["-", [{"Ref" : "envPrefix"}, "Subnet-Private-1"]]}
+          }
+        ]
+      }
+    },
+
+    "WebSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "DependsOn": ["vpc", "attachGateway"],
+      "Properties": {
+        "CidrBlock": {"Ref": "privateSubnet2Cidr"},
+        "AvailabilityZone": {"Ref" : "subnet2AZ"},
+        "VpcId": {"Ref": "vpc"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["-", [{"Ref" : "envPrefix"}, "Subnet-Private-2"]]}
+          }
+        ]
+      }
+    },
+
+    "DataSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "DependsOn": ["vpc", "attachGateway"],
+      "Properties": {
+        "CidrBlock": {"Ref": "privateSubnet1Cidr"},
+        "AvailabilityZone": {"Ref" : "subnet1AZ"},
+        "VpcId": {"Ref": "vpc"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["-", [{"Ref" : "envPrefix"}, "Subnet-Private-1"]]}
+          }
+        ]
+      }
+    },
+
+    "DataSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "DependsOn": ["vpc", "attachGateway"],
+      "Properties": {
+        "CidrBlock": {"Ref": "privateSubnet1Cidr"},
+        "AvailabilityZone": {"Ref" : "subnet1AZ"},
+        "VpcId": {"Ref": "vpc"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["-", [{"Ref" : "envPrefix"}, "Subnet-Private-1"]]}
+          }
+        ]
+      }
+    },
+
+    "SvcSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "DependsOn": ["vpc", "attachGateway"],
+      "Properties": {
+        "CidrBlock": {"Ref": "privateSubnet1Cidr"},
+        "AvailabilityZone": {"Ref" : "subnet1AZ"},
+        "VpcId": {"Ref": "vpc"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["-", [{"Ref" : "envPrefix"}, "Subnet-Private-1"]]}
+          }
+        ]
+      }
+    },
+
+    "SvcSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "DependsOn": ["vpc", "attachGateway"],
+      "Properties": {
+        "CidrBlock": {"Ref": "privateSubnet1Cidr"},
+        "AvailabilityZone": {"Ref" : "subnet1AZ"},
+        "VpcId": {"Ref": "vpc"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join" : ["-", [{"Ref" : "envPrefix"}, "Subnet-Private-1"]]}
+          }
+        ]
+      }
+    },
+
+   }
+
+}     
