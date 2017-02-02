@@ -1,0 +1,12 @@
+{
+  "id": "infra",
+  "vpc_name": "ami-61bbf104",
+  "nw_acl_id": "ami-c6da19ab",
+  "nw_acl_name": "",
+  "inbound_ports": [
+    80,
+    443,
+    943,
+    1194
+  ],
+}
