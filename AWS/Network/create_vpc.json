@@ -36,11 +36,35 @@
     "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
   },
 
+  "PublicSubnet3Cidr": {
+    "Description": "Public subnet 1 CIDR block.",
+    "Type": "String",
+    "Default": "10.210.62.0/24",
+    "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+    "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+  },
+
+  "PublicSubnet4Cidr": {
+    "Description": "Private subnet 1 CIDR block.",
+    "Type": "String",
+    "Default": "10.210.63.0/24",
+    "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+    "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+  },
   "subnet1AZ": {
     "Description": "Subnet 1 availability zone.",
     "Type": "AWS::EC2::AvailabilityZone::Name"
   },
   "subnet2AZ": {
+    "Description": "Subnet 2 availability zone.",
+    "Type": "AWS::EC2::AvailabilityZone::Name"
+  },
+
+  "subnet3AZ": {
+    "Description": "Subnet 1 availability zone.",
+    "Type": "AWS::EC2::AvailabilityZone::Name"
+  },
+  "subnet4AZ": {
     "Description": "Subnet 2 availability zone.",
     "Type": "AWS::EC2::AvailabilityZone::Name"
   }
@@ -88,6 +112,37 @@
       {
         "Key": "Name",
         "Value": "pub_subnet02"
+      }
+    ]
+  }
+
+},
+
+"PublicSubnet3": {
+  "Type": "AWS::EC2::Subnet",
+  "Properties": {
+    "CidrBlock": {"Ref": "PublicSubnet3Cidr"},
+    "AvailabilityZone": {"Ref" : "subnet3AZ"},
+    "VpcId": {"Ref": "RbVPC"},
+    "Tags": [
+      {
+        "Key": "Name",
+        "Value": "pub_subnet03"
+      }
+    ]
+  }
+},
+
+"PublicSubnet4": {
+  "Type": "AWS::EC2::Subnet",
+  "Properties": {
+    "CidrBlock": {"Ref": "PublicSubnet4Cidr"},
+    "AvailabilityZone": {"Ref" : "subnet4AZ"},
+    "VpcId": {"Ref": "RbVPC"},
+    "Tags": [
+      {
+        "Key": "Name",
+        "Value": "pub_subnet04"
       }
     ]
   }
@@ -143,6 +198,21 @@
   "Type" : "AWS::EC2::SubnetRouteTableAssociation",
   "Properties" : {
     "SubnetId" : { "Ref" : "PublicSubnet2" },
+    "RouteTableId" : { "Ref" : "PublicRouteTable" }
+  }
+},
+"PublicSubnet3RouteTableAssociation" : {
+  "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+  "Properties" : {
+    "SubnetId" : { "Ref" : "PublicSubnet3" },
+    "RouteTableId" : { "Ref" : "PublicRouteTable" }
+  }
+},
+
+"PublicSubnet4RouteTableAssociation" : {
+  "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+  "Properties" : {
+    "SubnetId" : { "Ref" : "PublicSubnet4" },
     "RouteTableId" : { "Ref" : "PublicRouteTable" }
   }
 },
