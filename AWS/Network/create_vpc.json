@@ -1,7 +1,7 @@
 
 {
  "AWSTemplateFormatVersion" : "2010-09-09",
- "Description" : "AWS CloudFormation Sample Template for Creating Role",
+ "Description" : "AWS CloudFormation Template for Creating VPC",
 
  "Parameters" : {
 

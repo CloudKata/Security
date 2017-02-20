@@ -1,9 +1,0 @@
-{
-  "id": "infra",
-  "network_acl_id": "acl-c06442a6",
-  "vpc_id": "vpc-ca2dbeac",
-  "openvpn_sg": "openvpn_sg",
-  "chefmgmt_sg": "chefmgmt_sg",
-  "public_elb": "web-ext"
-  
-}
