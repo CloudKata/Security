@@ -109,7 +109,7 @@
         "Targets": [
           { "Id": {"Ref" : "TargetInstance1"}, "Port": 80 },
         ],
-        "UnhealthyThresholdCount": 3,
+        "UnhealthyThresholdCount": 5,
         "VpcId": {"Ref" : "VpcId"},
       }
     },
@@ -134,7 +134,7 @@
         "Targets": [
           { "Id": {"Ref" : "TargetInstance1"}, "Port": 443 },
         ],
-        "UnhealthyThresholdCount": 3,
+        "UnhealthyThresholdCount": 5,
         "VpcId": {"Ref" : "VpcId"},
       }
     },
@@ -159,7 +159,7 @@
         "Targets": [
           { "Id": {"Ref" : "TargetInstance1"}, "Port": 943 },
         ],
-        "UnhealthyThresholdCount": 3,
+        "UnhealthyThresholdCount": 5,
         "VpcId": {"Ref" : "VpcId"},
       }
     },
@@ -184,7 +184,7 @@
         "Targets": [
           { "Id": {"Ref" : "TargetInstance1"}, "Port": 1194 },
         ],
-        "UnhealthyThresholdCount": 3,
+        "UnhealthyThresholdCount": 5,
         "VpcId": {"Ref" : "VpcId"},
       }
     },
@@ -206,7 +206,7 @@
           "Key": "deregistration_delay.timeout_seconds",
           "Value": "20"
         }],
-        "UnhealthyThresholdCount": 3,
+        "UnhealthyThresholdCount": 5,
         "VpcId": {"Ref" : "VpcId"},
       }
     },
@@ -222,16 +222,13 @@
           "HttpCode" : "200"
         },
         "Name": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "web-int2"]]},
-        "Port": 943,
+        "Port": 443,
         "Protocol": "HTTPS",
         "TargetGroupAttributes": [{
           "Key": "deregistration_delay.timeout_seconds",
           "Value": "20"
         }],
-        "Targets": [
-          { "Id": {"Ref" : "TargetInstance1"}, "Port": 943 },
-        ],
-        "UnhealthyThresholdCount": 3,
+        "UnhealthyThresholdCount": 5,
         "VpcId": {"Ref" : "VpcId"},
       }
     },

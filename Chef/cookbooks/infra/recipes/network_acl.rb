@@ -27,6 +27,7 @@ aws_network_acl acl_name do
 			{ rule_number: 3, action: :allow, protocol: 6, port_range: 943..943, cidr_block: '0.0.0.0/0' },
 			{ rule_number: 4, action: :allow, protocol: 6, port_range: 1194..1194, cidr_block: '0.0.0.0/0' },
 			{ rule_number: 5, action: :allow, protocol: 6, port_range: 1024..65535, cidr_block: '0.0.0.0/0' },
+			{ rule_number: 6, action: :allow, protocol: -1, cidr_block: '10.210.0.0/16' },
 			{ rule_number: 100, action: :deny, protocol: -1, cidr_block: '0.0.0.0/0' },
 		]
 		)

@@ -1,0 +1,34 @@
+# rubocop todo
+
+Lint/Loop:
+  Exclude:
+    - 'providers/ebs_raid.rb'
+
+Lint/ParenthesesAsGroupedExpression:
+  Exclude:
+    - 'test/fixtures/cookbooks/aws_test/recipes/dynamodb_table_create.rb'
+    - 'test/fixtures/cookbooks/aws_test/recipes/dynamodb_table_update.rb'
+
+Lint/UselessAssignment:
+  Exclude:
+    - 'libraries/ec2.rb'
+
+Metrics/BlockNesting:
+  Max: 7
+
+# Configuration parameters: CountKeywordArgs.
+Metrics/ParameterLists:
+  Max: 15
+
+Style/EndOfLine:
+  Exclude:
+    - 'libraries/matchers.rb'
+    - 'metadata.rb'
+
+# Configuration parameters: MinBodyLength.
+Style/GuardClause:
+  Exclude:
+    - 'providers/cloudformation_stack.rb'
+    - 'providers/cloudwatch.rb'
+    - 'providers/ebs_volume.rb'
+    - 'providers/elastic_ip.rb'
