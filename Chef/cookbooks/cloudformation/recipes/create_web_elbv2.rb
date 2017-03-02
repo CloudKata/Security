@@ -10,6 +10,11 @@ web_subnet1  = infra_config['web_subnet1']
 web_subnet2  = infra_config['web_subnet2']
 vpc_id = infra_config['vpc_id']
 
+target_instance1 = infra_config['web_target_instance1']
+target_instance2 = infra_config['web_target_instance2']
+target_instance3 = infra_config['web_target_instance3']
+target_instance4 = infra_config['web_target_instance4']
+
 
 
 web_elb_security_group_id = infra_config['web_elb_security_group_id']
@@ -39,6 +44,22 @@ aws_cloudformation_stack 'rb-prod-web-elb' do
     {
       :parameter_key => 'VpcId',
       :parameter_value => vpc_id
+    },
+    {
+      :parameter_key => 'TargetInstance1',
+      :parameter_value => target_instance1
+    },
+    {
+      :parameter_key => 'TargetInstance2',
+      :parameter_value => target_instance2
+    },
+    {
+      :parameter_key => 'TargetInstance3',
+      :parameter_value => target_instance3
+    },
+    {
+      :parameter_key => 'TargetInstance4',
+      :parameter_value => target_instance4
     },
   ])
 

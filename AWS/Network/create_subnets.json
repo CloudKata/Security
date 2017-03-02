@@ -76,6 +76,15 @@
     "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
     "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
   },
+
+  "DataSubnet3Cidr": {
+    "Description": "Private subnet 1 CIDR block.",
+    "Type": "String",
+    "Default": "10.210.92.0/24",
+    "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+    "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+  },
+  
   
   "subnet1AZ": {
     "Description": "Subnet 1 availability zone.",
@@ -107,6 +116,7 @@
 
   "WebSubnet1": {
     "Type": "AWS::EC2::Subnet",
+    "DeletionPolicy" : "Retain",
     "Properties": {
       "CidrBlock": {"Ref": "WebSubnet1Cidr"},
       "AvailabilityZone": {"Ref" : "subnet1AZ"},
@@ -122,6 +132,7 @@
 
   "WebSubnet1RouteTableAssociation" : {
     "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+    "DeletionPolicy" : "Retain",
     "Properties" : {
       "SubnetId" : { "Ref" : "WebSubnet1" },
       "RouteTableId" : { "Ref" : "NATRouteTable" }
@@ -130,6 +141,7 @@
 
   "WebSubnet2": {
     "Type": "AWS::EC2::Subnet",
+    "DeletionPolicy" : "Retain",
     "Properties": {
       "CidrBlock": {"Ref": "WebSubnet2Cidr"},
       "AvailabilityZone": {"Ref" : "subnet2AZ"},
@@ -147,6 +159,7 @@
 
   "WebSubnet2RouteTableAssociation" : {
     "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+    "DeletionPolicy" : "Retain",
     "Properties" : {
       "SubnetId" : { "Ref" : "WebSubnet2" },
       "RouteTableId" : { "Ref" : "NATRouteTable" }
@@ -155,6 +168,7 @@
 
   "WebSubnet3": {
     "Type": "AWS::EC2::Subnet",
+    "DeletionPolicy" : "Retain",
     "Properties": {
       "CidrBlock": {"Ref": "WebSubnet3Cidr"},
       "AvailabilityZone": {"Ref" : "subnet3AZ"},
@@ -170,6 +184,7 @@
 
   "WebSubnet3RouteTableAssociation" : {
     "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+    "DeletionPolicy" : "Retain",
     "Properties" : {
       "SubnetId" : { "Ref" : "WebSubnet3" },
       "RouteTableId" : { "Ref" : "NATRouteTable" }
@@ -178,6 +193,7 @@
 
   "WebSubnet4": {
     "Type": "AWS::EC2::Subnet",
+    "DeletionPolicy" : "Retain",
     "Properties": {
       "CidrBlock": {"Ref": "WebSubnet4Cidr"},
       "AvailabilityZone": {"Ref" : "subnet4AZ"},
@@ -194,6 +210,7 @@
 
   "WebSubnet4RouteTableAssociation" : {
     "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+    "DeletionPolicy" : "Retain",
     "Properties" : {
       "SubnetId" : { "Ref" : "WebSubnet4" },
       "RouteTableId" : { "Ref" : "NATRouteTable" }
@@ -202,6 +219,7 @@
 
   "SvcSubnet1": {
     "Type": "AWS::EC2::Subnet",
+    "DeletionPolicy" : "Retain",
     "Properties": {
       "CidrBlock": {"Ref": "SvcSubnet1Cidr"},
       "AvailabilityZone": {"Ref" : "subnet1AZ"},
@@ -218,6 +236,7 @@
 
   "SvcSubnet1RouteTableAssociation" : {
     "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+    "DeletionPolicy" : "Retain",
     "Properties" : {
       "SubnetId" : { "Ref" : "SvcSubnet1" },
       "RouteTableId" : { "Ref" : "NATRouteTable" }
@@ -226,6 +245,7 @@
 
   "SvcSubnet2": {
     "Type": "AWS::EC2::Subnet",
+    "DeletionPolicy" : "Retain",
     "Properties": {
       "CidrBlock": {"Ref": "SvcSubnet2Cidr"},
       "AvailabilityZone": {"Ref" : "subnet2AZ"},
@@ -294,6 +314,27 @@
       "RouteTableId" : { "Ref" : "NATRouteTable" }
     }
   },
+"DataSubnet3": {
+    "Type": "AWS::EC2::Subnet",
+    "Properties": {
+      "CidrBlock": {"Ref": "DataSubnet3Cidr"},
+      "AvailabilityZone": {"Ref" : "subnet3AZ"},
+      "VpcId": {"Ref": "VPC"},
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "data_1c"]]}
+        }
+      ]
+    }
+  },
 
+  "DataSubnet3RouteTableAssociation" : {
+    "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+    "Properties" : {
+      "SubnetId" : { "Ref" : "DataSubnet3" },
+      "RouteTableId" : { "Ref" : "NATRouteTable" }
+    }
+  },
 }
 }

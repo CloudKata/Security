@@ -26,9 +26,6 @@ infra_config = data_bag_item(databag_name, node['infra']['databag_item'])
 image_id              = node['infra']['image_id']
 key_name              = node['infra']['key_name']
 ssh_user_name         = node['infra']['ssh_user_name']
-#client_name           = infra_config['client_name'] || Chef::Config[:node_name]
-#signing_key_filename  = infra_config['signing_key_filename'] || Chef::Config[:client_key]
-#ssl_verify_mode       = infra_config['ssl_verify_mode']
 
 with_machine_options(
   convergence_options: {

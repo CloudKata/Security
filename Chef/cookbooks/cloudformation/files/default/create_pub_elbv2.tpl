@@ -33,15 +33,25 @@
       "Type" : "AWS::EC2::VPC::Id",
       "Description" : "Public ELB SecurityGroup in your Virtual Private Cloud (VPC)",
       "ConstraintDescription" : "must be an existing subnet in the selected Virtual Private Cloud."
-
     },
 
+    "TargetInstance1": {
+      "Type" : "AWS::EC2::Instance::Id",
+        "Description" : "List of ec2 instances",
+        "ConstraintDescription" : "must be an existing instance in the selected Virtual Private Cloud."
+    },
+    "TargetInstance2": {
+      "Type" : "AWS::EC2::Instance::Id",
+        "Description" : "List of ec2 instances",
+        "ConstraintDescription" : "must be an existing instance in the selected Virtual Private Cloud."
+    }
   },
 
 "Resources" : {
 
     "loadBalancer" : {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "DeletionPolicy" : "Retain",
       "Properties": {
         "Scheme" : "internet-facing",
         "Subnets" : [{ "Ref" : "Subnet1" }, { "Ref" : "Subnet2" }],
@@ -56,6 +66,7 @@
 
     "TargetGroup1" : {
       "Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "DeletionPolicy" : "Retain",
       "Properties" : {
         "HealthCheckIntervalSeconds": 30,
         "HealthCheckProtocol": "HTTP",
@@ -71,6 +82,10 @@
           "Key": "deregistration_delay.timeout_seconds",
           "Value": "20"
         }],
+        "Targets": [
+          { "Id": {"Ref" : "TargetInstance1"}, "Port": 80 },
+          { "Id": {"Ref" : "TargetInstance2"}, "Port": 80 }
+        ],
         "UnhealthyThresholdCount": 5,
         "VpcId": {"Ref" : "VpcId"},
       }
@@ -78,6 +93,7 @@
 
     "TargetGroup2" : {
       "Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "DeletionPolicy" : "Retain",
       "Properties" : {
         "HealthCheckIntervalSeconds": 30,
         "HealthCheckProtocol": "HTTPS",
@@ -93,6 +109,10 @@
           "Key": "deregistration_delay.timeout_seconds",
           "Value": "20"
         }],
+        "Targets": [
+          { "Id": {"Ref" : "TargetInstance1"}, "Port": 443 },
+          { "Id": {"Ref" : "TargetInstance2"}, "Port": 443 },
+        ],
         "UnhealthyThresholdCount": 5,
         "VpcId": {"Ref" : "VpcId"},
       }
@@ -100,6 +120,7 @@
 
     "Listener1": {
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "DeletionPolicy" : "Retain",
       "Properties": {
         "DefaultActions": [{
           "Type": "forward",
@@ -110,6 +131,8 @@
         "Protocol": "HTTP"
       }
     },
+
+
   }
 
 }

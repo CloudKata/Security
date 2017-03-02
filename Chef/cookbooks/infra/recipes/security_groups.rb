@@ -41,7 +41,8 @@ security_groups.push(sg_name: pub_elb_security_group_name,
 security_groups.push(sg_name: pub_srv_security_group_name,
                      sg_rules: [
                        { port: 80, protocol: :tcp, sources: [pub_elb_security_group_name] },
-                       { port: 443, protocol: :tcp, sources: [pub_elb_security_group_name] }
+                       { port: 443, protocol: :tcp, sources: [pub_elb_security_group_name] },
+                       { port: 22, protocol: :tcp, sources: [openvpn_sg, chefmgmt_sg] }
 
                      ],)
 
@@ -65,8 +66,8 @@ security_groups.push(sg_name: svc_srv_security_group_name,
 
 security_groups.push(sg_name: data_srv_security_group_name,
                      sg_rules: [
-                       { port: 5432, protocol: :tcp, sources: [web_srv_security_group_name, openvpn_sg, chefmgmt_sg] },
-                       { port: 3306, protocol: :tcp, sources: [web_srv_security_group_name, openvpn_sg, chefmgmt_sg] }
+                       { port: 5432, protocol: :tcp, sources: [web_srv_security_group_name, svc_srv_security_group_name, openvpn_sg, chefmgmt_sg] },
+                       { port: 3306, protocol: :tcp, sources: [web_srv_security_group_name, svc_srv_security_group_name, openvpn_sg, chefmgmt_sg] }
                      ],)
 
 security_groups.each do |sg|
