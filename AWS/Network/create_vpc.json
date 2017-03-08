@@ -1,7 +1,7 @@
 
 {
  "AWSTemplateFormatVersion" : "2010-09-09",
- "Description" : "AWS CloudFormation Sample Template for Creating Role",
+ "Description" : "AWS CloudFormation Template for Creating VPC",
 
  "Parameters" : {
 
@@ -36,11 +36,35 @@
     "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
   },
 
+  "PublicSubnet3Cidr": {
+    "Description": "Public subnet 1 CIDR block.",
+    "Type": "String",
+    "Default": "10.210.62.0/24",
+    "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+    "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+  },
+
+  "PublicSubnet4Cidr": {
+    "Description": "Private subnet 1 CIDR block.",
+    "Type": "String",
+    "Default": "10.210.63.0/24",
+    "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+    "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x and subnet of VPC."
+  },
   "subnet1AZ": {
     "Description": "Subnet 1 availability zone.",
     "Type": "AWS::EC2::AvailabilityZone::Name"
   },
   "subnet2AZ": {
+    "Description": "Subnet 2 availability zone.",
+    "Type": "AWS::EC2::AvailabilityZone::Name"
+  },
+
+  "subnet3AZ": {
+    "Description": "Subnet 1 availability zone.",
+    "Type": "AWS::EC2::AvailabilityZone::Name"
+  },
+  "subnet4AZ": {
     "Description": "Subnet 2 availability zone.",
     "Type": "AWS::EC2::AvailabilityZone::Name"
   }
@@ -50,6 +74,7 @@
 "Resources" : {
   "RbVPC" : {
    "Type" : "AWS::EC2::VPC",
+   "DeletionPolicy" : "Retain",
    "Properties" : {
     "CidrBlock" : { "Ref" : "VPCCIDR" },
     "EnableDnsSupport" : "true",
@@ -65,6 +90,7 @@
 
 "PublicSubnet1": {
   "Type": "AWS::EC2::Subnet",
+  "DeletionPolicy" : "Retain",
   "Properties": {
     "CidrBlock": {"Ref": "PublicSubnet1Cidr"},
     "AvailabilityZone": {"Ref" : "subnet1AZ"},
@@ -80,6 +106,7 @@
 
 "PublicSubnet2": {
   "Type": "AWS::EC2::Subnet",
+  "DeletionPolicy" : "Retain",
   "Properties": {
     "CidrBlock": {"Ref": "PublicSubnet2Cidr"},
     "AvailabilityZone": {"Ref" : "subnet2AZ"},
@@ -94,8 +121,42 @@
 
 },
 
+"PublicSubnet3": {
+  "Type": "AWS::EC2::Subnet",
+  "DeletionPolicy" : "Retain",
+  "Properties": {
+    "CidrBlock": {"Ref": "PublicSubnet3Cidr"},
+    "AvailabilityZone": {"Ref" : "subnet3AZ"},
+    "VpcId": {"Ref": "RbVPC"},
+    "Tags": [
+      {
+        "Key": "Name",
+        "Value": "pub_subnet03"
+      }
+    ]
+  }
+},
+
+"PublicSubnet4": {
+  "Type": "AWS::EC2::Subnet",
+  "DeletionPolicy" : "Retain",
+  "Properties": {
+    "CidrBlock": {"Ref": "PublicSubnet4Cidr"},
+    "AvailabilityZone": {"Ref" : "subnet4AZ"},
+    "VpcId": {"Ref": "RbVPC"},
+    "Tags": [
+      {
+        "Key": "Name",
+        "Value": "pub_subnet04"
+      }
+    ]
+  }
+
+},
+
 "InternetGateway" : {
   "Type" : "AWS::EC2::InternetGateway",
+  "DeletionPolicy" : "Retain",
   "DependsOn" : "RbVPC",
   "Properties" : {
     "Tags" : [ {"Key" : "Environment", "Value" : { "Ref" : "AWS::StackId"} } ]
@@ -104,6 +165,7 @@
 
 "AttachGateway" : {
   "Type" : "AWS::EC2::VPCGatewayAttachment",
+  "DeletionPolicy" : "Retain",
   "Properties" : {
     "VpcId" : { "Ref" : "RbVPC" },
     "InternetGatewayId" : { "Ref" : "InternetGateway" }
@@ -112,6 +174,7 @@
 
 "PublicRouteTable" : {
   "Type" : "AWS::EC2::RouteTable",
+  "DeletionPolicy" : "Retain",
   "Properties" : {
     "VpcId" : {"Ref" : "RbVPC"},
     "Tags" : [ {
@@ -123,6 +186,7 @@
 
 "PublicRoute" : {
   "Type" : "AWS::EC2::Route",
+  "DeletionPolicy" : "Retain",
   "DependsOn" : "PublicRouteTable",
   "Properties" : {
     "RouteTableId" : { "Ref" : "PublicRouteTable" },
@@ -133,6 +197,7 @@
 
 "PublicSubnet1RouteTableAssociation" : {
   "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+  "DeletionPolicy" : "Retain",
   "Properties" : {
     "SubnetId" : { "Ref" : "PublicSubnet1" },
     "RouteTableId" : { "Ref" : "PublicRouteTable" }
@@ -141,14 +206,33 @@
 
 "PublicSubnet2RouteTableAssociation" : {
   "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+  "DeletionPolicy" : "Retain",
   "Properties" : {
     "SubnetId" : { "Ref" : "PublicSubnet2" },
+    "RouteTableId" : { "Ref" : "PublicRouteTable" }
+  }
+},
+"PublicSubnet3RouteTableAssociation" : {
+  "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+  "DeletionPolicy" : "Retain",
+  "Properties" : {
+    "SubnetId" : { "Ref" : "PublicSubnet3" },
+    "RouteTableId" : { "Ref" : "PublicRouteTable" }
+  }
+},
+
+"PublicSubnet4RouteTableAssociation" : {
+  "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+  "DeletionPolicy" : "Retain",
+  "Properties" : {
+    "SubnetId" : { "Ref" : "PublicSubnet4" },
     "RouteTableId" : { "Ref" : "PublicRouteTable" }
   }
 },
 
 "NatGateway" : {
   "DependsOn" : "AttachGateway",
+  "DeletionPolicy" : "Retain",
   "Type" : "AWS::EC2::NatGateway",
   "Properties" : {
     "AllocationId" : { "Fn::GetAtt" : ["EIP", "AllocationId"]},
@@ -158,6 +242,7 @@
 
 "EIP" : {
   "Type" : "AWS::EC2::EIP",
+  "DeletionPolicy" : "Retain",
   "Properties" : {
     "Domain" : "vpc"
   }
@@ -165,6 +250,7 @@
 
 "NATRouteTable" : {
   "Type" : "AWS::EC2::RouteTable",
+  "DeletionPolicy" : "Retain",
   "Properties" : {
     "VpcId" : {"Ref" : "RbVPC"},
     "Tags" : [ {
@@ -177,6 +263,7 @@
 
 "NATRoute" : {
   "Type" : "AWS::EC2::Route",
+  "DeletionPolicy" : "Retain",
   "DependsOn" : "PublicRouteTable",
   "Properties" : {
     "RouteTableId" : { "Ref" : "NATRouteTable" },

@@ -1,0 +1,265 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "AWS CloudFormation Template for Creating Application load balancers in the VPC",
+
+  "Parameters" : {
+
+    "EnvPrefix" : {
+      "Description": "Environment name prefix.",
+      "Type": "String",
+      "Default": "prod"
+    },
+
+    "VpcId" : {
+      "Type" : "AWS::EC2::VPC::Id",
+      "Description" : "IP Address range for the VPN connected VPC",
+      "ConstraintDescription": "must be an existing VPC"
+    },
+
+    "TargetInstance1" : {
+      "Type" : "AWS::EC2::Instance::Id",
+      "Description" : "Id of the ec2 instance (default is openvpn server) to be added to public target group",
+      "ConstraintDescription": "must be an existing instance in the same subnet"
+    },
+
+    "PublicSubnetAZ1" : {
+      "Type" : "AWS::EC2::Subnet::Id",
+      "Description" : "SubnetId of an public subnet (for availability zone a) in your Virtual Private Cloud (VPC)",
+      "ConstraintDescription" : "must be an existing subnet in the selected Virtual Private Cloud."
+    },
+    "PublicSubnetAZ2" : {
+      "Type" : "AWS::EC2::Subnet::Id",
+      "Description" : "SubnetId of an public subnet (for availability zone b) in your Virtual Private Cloud (VPC)",
+      "ConstraintDescription" : "must be an existing subnet in the selected Virtual Private Cloud."
+    },
+
+    "PublicElbSecurityGroup": {
+      "Type" : "AWS::EC2::SecurityGroup::Id",
+      "Description" : "Public ELB SecurityGroup in your Virtual Private Cloud (VPC)",
+      "ConstraintDescription" : "must be an existing subnet in the selected Virtual Private Cloud."
+    },    
+    "WebSubnetAZ1" : {
+      "Type" : "AWS::EC2::Subnet::Id",
+      "Description" : "SubnetId of web subnet (in availability zone a) in your Virtual Private Cloud (VPC)",
+      "ConstraintDescription" : "must be an existing subnet in the selected Virtual Private Cloud."
+    },
+    "WebSubnetAZ2" : {
+      "Type" : "AWS::EC2::Subnet::Id",
+      "Description" : "SubnetId of web subnet (in availability zone b) in your Virtual Private Cloud (VPC)",
+      "ConstraintDescription" : "must be an existing subnet in the selected Virtual Private Cloud."
+    },
+
+    "WebElbSecurityGroup": {
+      "Type" : "AWS::EC2::SecurityGroup::Id",
+      "Description" : "Web ELB SecurityGroup (for WebSubnetAZ1) in your Virtual Private Cloud (VPC)",
+      "ConstraintDescription" : "must be an existing subnet in the selected Virtual Private Cloud."
+    }
+
+  },
+
+  "Resources" : {
+
+    "loadBalancer1" : {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "Scheme" : "internet-facing",
+        "Subnets" : [ {"Ref": "PublicSubnetAZ1"}, {"Ref" : "PublicSubnetAZ2"}],
+        "LoadBalancerAttributes" : [
+          { "Key" : "idle_timeout.timeout_seconds", "Value" : "50" },
+          { "Key" : "deletion_protection.enabled", "Value" : "false" }
+        ],
+        "Name": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "pub-ext-elb"]]},
+        "SecurityGroups": [{"Ref": "PublicElbSecurityGroup"}]
+      }
+    },
+
+    "loadBalancer2" : {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "Scheme" : "internal",
+        "Subnets" : [ {"Ref": "WebSubnetAZ1"}, {"Ref" : "WebSubnetAZ2"}],
+        "LoadBalancerAttributes" : [
+          { "Key" : "idle_timeout.timeout_seconds", "Value" : "50" },
+          { "Key" : "deletion_protection.enabled", "Value" : "false" }
+        ],
+        "Name": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "web-int-elb"]]},
+        "SecurityGroups": [{"Ref": "WebElbSecurityGroup"}]
+
+      }
+    },
+
+    "TargetGroup1" : {
+      "Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties" : {
+        "HealthCheckIntervalSeconds": 30,
+        "HealthCheckProtocol": "HTTP",
+        "HealthCheckTimeoutSeconds": 10,
+        "HealthyThresholdCount": 4,
+        "Matcher" : {
+          "HttpCode" : "200"
+        },
+        "Name": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "pub-ext1"]]},
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetGroupAttributes": [{
+          "Key": "deregistration_delay.timeout_seconds",
+          "Value": "20"
+        }],
+        "Targets": [
+          { "Id": {"Ref" : "TargetInstance1"}, "Port": 80 },
+        ],
+        "UnhealthyThresholdCount": 5,
+        "VpcId": {"Ref" : "VpcId"},
+      }
+    },
+
+    "TargetGroup2" : {
+      "Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties" : {
+        "HealthCheckIntervalSeconds": 30,
+        "HealthCheckProtocol": "HTTPS",
+        "HealthCheckTimeoutSeconds": 10,
+        "HealthyThresholdCount": 4,
+        "Matcher" : { 
+          "HttpCode" : "200"
+        },
+        "Name": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "pub-ext2"]]},
+        "Port": 443,
+        "Protocol": "HTTPS",
+        "TargetGroupAttributes": [{
+          "Key": "deregistration_delay.timeout_seconds",
+          "Value": "20"
+        }],
+        "Targets": [
+          { "Id": {"Ref" : "TargetInstance1"}, "Port": 443 },
+        ],
+        "UnhealthyThresholdCount": 5,
+        "VpcId": {"Ref" : "VpcId"},
+      }
+    },
+
+    "TargetGroup3" : {
+      "Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties" : {
+        "HealthCheckIntervalSeconds": 30,
+        "HealthCheckProtocol": "HTTPS",
+        "HealthCheckTimeoutSeconds": 10,
+        "HealthyThresholdCount": 4,
+        "Matcher" : { 
+          "HttpCode" : "200"
+        },
+        "Name": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "pub-ext3"]]},
+        "Port": 943,
+        "Protocol": "HTTPS",
+        "TargetGroupAttributes": [{
+          "Key": "deregistration_delay.timeout_seconds",
+          "Value": "20"
+        }],
+        "Targets": [
+          { "Id": {"Ref" : "TargetInstance1"}, "Port": 943 },
+        ],
+        "UnhealthyThresholdCount": 5,
+        "VpcId": {"Ref" : "VpcId"},
+      }
+    },
+
+    "TargetGroup4" : {
+      "Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties" : {
+        "HealthCheckIntervalSeconds": 30,
+        "HealthCheckProtocol": "UDP",
+        "HealthCheckTimeoutSeconds": 10,
+        "HealthyThresholdCount": 4,
+        "Matcher" : { 
+          "HttpCode" : "200"
+        },
+        "Name": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "pub-ext4"]]},
+        "Port": 1194,
+        "Protocol": "HTTPS",
+        "TargetGroupAttributes": [{
+          "Key": "deregistration_delay.timeout_seconds",
+          "Value": "20"
+        }],
+        "Targets": [
+          { "Id": {"Ref" : "TargetInstance1"}, "Port": 1194 },
+        ],
+        "UnhealthyThresholdCount": 5,
+        "VpcId": {"Ref" : "VpcId"},
+      }
+    },
+
+    "TargetGroup5" : {
+      "Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties" : {
+        "HealthCheckIntervalSeconds": 30,
+        "HealthCheckProtocol": "HTTP",
+        "HealthCheckTimeoutSeconds": 10,
+        "HealthyThresholdCount": 4,
+        "Matcher" : {
+          "HttpCode" : "200"
+        },
+        "Name": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "web-int1"]]},
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetGroupAttributes": [{
+          "Key": "deregistration_delay.timeout_seconds",
+          "Value": "20"
+        }],
+        "UnhealthyThresholdCount": 5,
+        "VpcId": {"Ref" : "VpcId"},
+      }
+    },
+
+    "TargetGroup6" : {
+      "Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties" : {
+        "HealthCheckIntervalSeconds": 30,
+        "HealthCheckProtocol": "HTTPS",
+        "HealthCheckTimeoutSeconds": 10,
+        "HealthyThresholdCount": 4,
+        "Matcher" : { 
+          "HttpCode" : "200"
+        },
+        "Name": {"Fn::Join" : ["-", [{"Ref" : "EnvPrefix"}, "web-int2"]]},
+        "Port": 443,
+        "Protocol": "HTTPS",
+        "TargetGroupAttributes": [{
+          "Key": "deregistration_delay.timeout_seconds",
+          "Value": "20"
+        }],
+        "UnhealthyThresholdCount": 5,
+        "VpcId": {"Ref" : "VpcId"},
+      }
+    },
+
+    "Listener1": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "DefaultActions": [{
+          "Type": "forward",
+          "TargetGroupArn": { "Ref": "TargetGroup1" }
+        }],
+        "LoadBalancerArn": { "Ref": "loadBalancer1" },
+        "Port": "80",
+        "Protocol": "HTTP"
+      }
+    },
+
+    "Listener2": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "DefaultActions": [{
+          "Type": "forward",
+          "TargetGroupArn": { "Ref": "TargetGroup2" }
+        }],
+        "LoadBalancerArn": { "Ref": "loadBalancer2" },
+        "Port": "80",
+        "Protocol": "HTTP"
+      }
+    }, 
+
+
+  }
+
+}

@@ -1,0 +1,42 @@
+{
+  "id": "infra",
+  "network_acl_id": "",
+  "vpc_id": "",
+  "openvpn_sg": "",
+  "chefmgmt_sg": "",
+  "web_srv_count": 2, 
+  "svc_srv_count": 2,
+  "pub_srv_count": 2,
+  "pub_elb_security_group_id": "",
+  "pub_subnet1": "",
+  "pub_subnet2": "",
+  "vpc_id": "vpc-ca2dbeac",
+  "web_elb_security_group_id": "",
+  "web_subnet1": "",
+  "web_subnet2": "",
+  "web_subnet_ids": [
+    "",
+    ""
+  ],
+  "svc_subnet_ids": [
+    "",
+    ""
+  ],
+  "data_subnet_ids": [
+    "",
+    ""
+  ],
+
+  "pub_subnet_ids": [
+    "",
+    ""
+  ],
+
+  "pub_target_instance1": "",
+  "pub_target_instance2": "",
+  "web_target_instance1": "",
+  "web_target_instance2": "",
+  "web_target_instance3": "",
+  "web_target_instance4": ""
+
+}
