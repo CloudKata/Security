@@ -61,7 +61,6 @@ e.g:
     # chef-client -z -r 'recipe[infra::env_setup]'
 
 
-
 ## Contributing
 
 1. Fork the repository on Github

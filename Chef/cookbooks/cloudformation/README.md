@@ -23,26 +23,23 @@ Attributes are used from cookbook infra
 
 ## Usage
 
-### cloudformation
+### cloudformation::create_public_elbv2
 
 These recipes can be run from a chef provisioning machine where the chef repo is present as below.
 e.g:
 
-### cloudformation::create_public_elbv2
-
-````# cd chef-repo/
+    # cd chef-repo/
     # chef-client -z -r 'recipe[cloudformation::create_public_elbv2]'
-````
 
 
 ## Contributing
 
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+    1. Fork the repository on Github
+    2. Create a named feature branch (like `add_component_x`)
+    3. Write your change
+    4. Write tests for your change (if applicable)
+    5. Run the tests, ensuring they all pass
+    6. Submit a Pull Request using Github
 
 ## License and Authors
 
