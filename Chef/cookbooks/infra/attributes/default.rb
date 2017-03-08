@@ -27,7 +27,7 @@ default['infra']['svc_worker_instance_type'] = 't2.medium'
 
 #Server Names
 default['infra']['web_app_srv_name'] = "#{node['infra']['app_prefix']}_#{node['infra']['env_prefix']}_web_app_srv"
-default['infra']['web_api_srv_name'] = "#{node['infra']['app_prefix']}_#{node['infra']['env_prefix']}_web_api_srv"
+default['infra']['web_api_srv_name'] = "#{node['infra']['app_prefix']}_#{node['infra']['env_prefix']}_web_public_app_srv"
 default['infra']['svc_worker_name'] = "#{node['infra']['app_prefix']}_#{node['infra']['env_prefix']}_svc_worker_srv"
 default['infra']['pub_app_srv_name'] = "#{node['infra']['app_prefix']}_#{node['infra']['env_prefix']}_http_proxy_srv"
 

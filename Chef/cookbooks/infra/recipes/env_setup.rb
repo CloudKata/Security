@@ -61,7 +61,6 @@ machine_batch do
                 enabled: true,
                 },
             disable_api_termination: true,
-            user_data: "#{web_app_srv_name}#{i}",
               }
             end
           end
@@ -86,7 +85,6 @@ machine_batch do
               enabled: true,
               },
               disable_api_termination: true,
-              user_data: "#{web_api_srv_name}#{i}",
             }
           end
       end
@@ -112,7 +110,6 @@ machine_batch do
               enabled: true,
               },
               disable_api_termination: true,
-              user_data: "#{svc_worker_srv_name}#{i}",
             }           
           end
       end

@@ -1,18 +1,12 @@
 # cloudformation Cookbook
 
-TODO: Enter the cookbook description here.
+This cookbook is used to create cloudformation stack for the below services:
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
+1. AWS Elastic Load Balancer V2 (Application Load Balancer)
+2. RDS instance
+3. Subnets
 
 ## Requirements
-
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
-
-e.g.
-### Platforms
-
-- SandwichOS
 
 ### Chef
 
@@ -20,53 +14,29 @@ e.g.
 
 ### Cookbooks
 
-- `toaster` - cloudformation needs toaster to brown your bagel.
+- `aws` - cloudformation depends on aws cookbook for the resources.
+= `infra` - cloudformation depends on aws cookbook for the attributes.
 
 ## Attributes
 
-TODO: List your cookbook attributes here.
-
-e.g.
-### cloudformation::default
-
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['cloudformation']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
+Attributes are used from cookbook infra
 
 ## Usage
 
-### cloudformation::default
+### cloudformation
 
-TODO: Write usage instructions for each cookbook.
+These recipes can be run from a chef provisioning machine where the chef repo is present as below.
+e.g:
 
-e.g.
-Just include `cloudformation` in your node's `run_list`:
+### cloudformation::create_public_elbv2
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[cloudformation]"
-  ]
-}
-```
+````# cd chef-repo/
+    # chef-client -z -r 'recipe[cloudformation::create_public_elbv2]'
+````
+
 
 ## Contributing
 
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
-
-e.g.
 1. Fork the repository on Github
 2. Create a named feature branch (like `add_component_x`)
 3. Write your change
@@ -76,5 +46,6 @@ e.g.
 
 ## License and Authors
 
-Authors: TODO: List authors
+Authors: Kamalika Majumder (kamalika@cloudkata.com)
+Apache License version 2.0
 

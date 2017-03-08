@@ -39,7 +39,6 @@ machine_batch do
                 enabled: true,
                 },
             disable_api_termination: false,
-            user_data: "#{pub_app_srv_name}#{i}"
           }
             end
           end
