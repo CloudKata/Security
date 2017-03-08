@@ -43,7 +43,7 @@ e.g:
 
 ## License and Authors
 
-- Author:: Kamalika Majumder ([kamalika@cloudkata.com](mailto:kamalika@cloudkata.com))
+Author:: Kamalika Majumder ([kamalika@cloudkata.com](mailto:kamalika@cloudkata.com))
 
 
 Copyright 2017, Cloudkata, Staxa LLP.
@@ -61,5 +61,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-License: Apache License version 2.0
 

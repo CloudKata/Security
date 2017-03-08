@@ -73,7 +73,7 @@ e.g:
 
 ## License and Authors
 
-- Author:: Kamalika Majumder ([kamalika@cloudkata.com](mailto:kamalika@cloudkata.com))
+Author:: Kamalika Majumder ([kamalika@cloudkata.com](mailto:kamalika@cloudkata.com))
 
 
 Copyright 2017, Cloudkata, Staxa LLP.
