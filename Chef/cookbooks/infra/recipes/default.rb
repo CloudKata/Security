@@ -35,6 +35,11 @@ with_machine_options(
   bootstrap_options:  {
     image_id: image_id,
     key_name: key_name,
+    user_data: <<-EOF
+<bash>
+# custom bash code goes here, executed at instance creation time
+</bash>
+  EOF
   },
   ssh_username: ssh_user_name,
   transport_address_location: :private_ip
