@@ -2,7 +2,6 @@ default['infra']['databag_item'] = 'infra'
 default['infra']['databag_name'] = 'prod'
 default['infra']['env_prefix'] = 'prod'
 default['infra']['app_prefix'] = 'rb'
-default['infra']['network_acl_id'] = 'acl-c06442a6'
 default['infra']['network_acl_name'] = "#{node['infra']['app_prefix']}_#{node['infra']['env_prefix']}_acl"
 
 #Security Group Names:

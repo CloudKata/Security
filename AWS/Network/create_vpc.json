@@ -9,6 +9,11 @@
     "Description": "Environment name prefix.",
     "Type": "String"
   },
+  "AppPrefix" : {
+    "Description": "Environment name prefix.",
+    "Type": "String",
+    "Default": "rb"
+  },
 
   "VPCCIDR" : {
     "Type" : "String",
@@ -98,7 +103,7 @@
     "Tags": [
       {
         "Key": "Name",
-        "Value": "pub_subnet01"
+        "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "pub1a"]]}
       }
     ]
   }
@@ -114,7 +119,7 @@
     "Tags": [
       {
         "Key": "Name",
-        "Value": "pub_subnet02"
+        "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "pub1b"]]}
       }
     ]
   }
@@ -131,7 +136,7 @@
     "Tags": [
       {
         "Key": "Name",
-        "Value": "pub_subnet03"
+        "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "pub1c"]]}
       }
     ]
   }
@@ -147,7 +152,7 @@
     "Tags": [
       {
         "Key": "Name",
-        "Value": "pub_subnet04"
+        "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "pub1d"]]}
       }
     ]
   }
