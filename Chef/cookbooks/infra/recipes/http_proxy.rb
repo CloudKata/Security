@@ -3,8 +3,8 @@ include_recipe 'infra::default'
 
 device_name = node['infra']['device_name']
 pub_instance_type = node['infra']['pub_instance_type']
-pub_app_srv_name  = node['infra']['pub_app_srv_name']
-pub_ext_elb_name     = node['infra']['pub_ext_elb_name']
+pub_proxy_srv_name  = node['infra']['pub_proxy_srv_name']
+pub_ext_elb_name  = node['infra']['pub_ext_elb_name']
 instance_iam_role = node['infra']['instance_iam_role']
 pub_srv_security_group_name = node['infra']['pub_srv_sg_name']
 pub_app_srv_runlist = node['infra']['pub_app_srv_runlist']
@@ -18,7 +18,7 @@ pub_subnet_ids  = infra_config['pub_subnet_ids']
 
 machine_batch do
   1.upto(pub_srv_count) do |i|
-    machine "#{pub_app_srv_name}#{i}" do
+    machine "#{pub_proxy_srv_name}#{i}" do
       add_machine_options bootstrap_options: {
         block_device_mappings: [{
           device_name: device_name,
@@ -39,6 +39,7 @@ machine_batch do
                 enabled: true,
                 },
             disable_api_termination: false,
+            user_data: "#{pub_proxy_srv_name}#{i}"
           }
             end
           end

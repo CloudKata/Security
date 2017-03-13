@@ -49,6 +49,7 @@ security_groups.push(sg_name: pub_srv_security_group_name,
 security_groups.push(sg_name: web_elb_security_group_name,
                      sg_rules: [
                        { port: 80, protocol: :tcp, sources: [pub_srv_security_group_name] },
+                       { port: 80, protocol: :tcp, sources: [pub_elb_security_group_name] },
                      ],)
 
 security_groups.push(sg_name: web_srv_security_group_name,

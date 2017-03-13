@@ -24,8 +24,8 @@ databag_name = node['infra']['databag_name']
 infra_config = data_bag_item(databag_name, node['infra']['databag_item'])
 
 image_id              = node['infra']['image_id']
-key_name              = node['infra']['key_name']
-ssh_user_name         = node['infra']['ssh_user_name']
+key_name              = infra_config['key_name']
+ssh_user_name         = infra_config['ssh_user_name']
 
 with_machine_options(
   convergence_options: {
@@ -34,12 +34,7 @@ with_machine_options(
   },
   bootstrap_options:  {
     image_id: image_id,
-    key_name: key_name,
-    user_data: <<-EOF
-<bash>
-# custom bash code goes here, executed at instance creation time
-</bash>
-  EOF
+    key_name: key_name
   },
   ssh_username: ssh_user_name,
   transport_address_location: :private_ip

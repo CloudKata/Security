@@ -20,7 +20,7 @@ default['infra']['web_int_elb_name'] = "#{node['infra']['app_prefix']}-#{node['i
 
 default['infra']['device_name'] = '/dev/sda1'
 
-default['infra']['instance_type'] = 't2.medium'
+default['infra']['pub_instance_type'] = 't2.medium'
 
 #Server Names
 default['infra']['pub_proxy_srv_name'] = "#{node['infra']['app_prefix']}_#{node['infra']['env_prefix']}_pub_http_proxy"
