@@ -9,7 +9,11 @@
     "Type": "String",
     "Default": "prod"
   },
-
+  "AppPrefix" : {
+    "Description": "Environment name prefix.",
+    "Type": "String",
+    "Default": "rb"
+  },
   "VPC" : {
     "Type" : "AWS::EC2::VPC::Id",
     "Description" : "IP Address range for the VPN connected VPC",
@@ -124,7 +128,7 @@
       "Tags": [
         {
           "Key": "Name",
-          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "web_1a"]]}
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "web1a"]]}
         }
       ]
     }
@@ -149,7 +153,7 @@
       "Tags": [
         {
           "Key": "Name",
-          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "web_1b"]]}
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "web1b"]]}
         }
       ]
     }
@@ -176,7 +180,7 @@
       "Tags": [
         {
           "Key": "Name",
-          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "web_1c"]]}
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "web1c"]]}
         }
       ]
     }
@@ -201,7 +205,7 @@
       "Tags": [
         {
           "Key": "Name",
-          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "web_1d"]]}
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "web1d"]]}
         }
       ]
     }
@@ -227,7 +231,7 @@
       "Tags": [
         {
           "Key": "Name",
-          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "svc_1a"]]}
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "svc1a"]]}
         }
       ]
     }
@@ -253,7 +257,7 @@
       "Tags": [
         {
           "Key": "Name",
-          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "svc_1b"]]}
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "svc1b"]]}
         }
       ]
     }
@@ -277,7 +281,7 @@
       "Tags": [
         {
           "Key": "Name",
-          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "data_1a"]]}
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "data1a"]]}
         }
       ]
     }
@@ -301,7 +305,7 @@
       "Tags": [
         {
           "Key": "Name",
-          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "data_1b"]]}
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "data1b"]]}
         }
       ]
     }
@@ -323,7 +327,7 @@
       "Tags": [
         {
           "Key": "Name",
-          "Value": {"Fn::Join" : ["_", [{"Ref" : "EnvPrefix"}, "data_1c"]]}
+          "Value": {"Fn::Join" : ["_", [{"Ref" : "AppPrefix"}, {"Ref" : "EnvPrefix"}, "data1c"]]}
         }
       ]
     }
