@@ -1,4 +1,4 @@
-# vpc Cookbook
+# bootstrap Cookbook
 
 TODO: Enter the cookbook description here.
 
@@ -20,14 +20,14 @@ e.g.
 
 ### Cookbooks
 
-- `toaster` - vpc needs toaster to brown your bagel.
+- `toaster` - bootstrap needs toaster to brown your bagel.
 
 ## Attributes
 
 TODO: List your cookbook attributes here.
 
 e.g.
-### vpc::default
+### bootstrap::default
 
 <table>
   <tr>
@@ -37,7 +37,7 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['vpc']['bacon']</tt></td>
+    <td><tt>['bootstrap']['bacon']</tt></td>
     <td>Boolean</td>
     <td>whether to include bacon</td>
     <td><tt>true</tt></td>
@@ -46,18 +46,18 @@ e.g.
 
 ## Usage
 
-### vpc::default
+### bootstrap::default
 
 TODO: Write usage instructions for each cookbook.
 
 e.g.
-Just include `vpc` in your node's `run_list`:
+Just include `bootstrap` in your node's `run_list`:
 
 ```json
 {
   "name":"my_node",
   "run_list": [
-    "recipe[vpc]"
+    "recipe[bootstrap]"
   ]
 }
 ```

@@ -1,0 +1,9 @@
+{
+  "id": "bootstrap",
+  "puppet_password": {
+    "encrypted_data": "8rDaabYMw5Nh8WdHJJurBIqXcLg7K81Zp6yBRnLGMl09E2qmH6YIegq9W0V5\n0JhWuE6nbCehW0SmLTDplvpLhw==\n",
+    "iv": "clo2KKsJ5tQNn8deOaI+7A==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  }
+}
