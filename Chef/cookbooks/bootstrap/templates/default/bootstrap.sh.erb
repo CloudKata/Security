@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+set -e
+set -v
+
+#setup hostname
+HOSTNAME=<%= @machine_hostname %>
+hostname $HOSTNAME
+echo $HOSTNAME > /etc/hostname
+echo "127.0.0.1 $HOSTNAME" >> /etc/hosts
+
+
+#puppet environmet
+echo 'FACTER_MACHINE_TYPE=<%= @facter_machine_type %>' >> /etc/environment
+echo 'FACTER_ENV_NAME=<%= @facter_env_name %>' >> /etc/environment
+echo 'FACTER_MACHINE_NAME=<%= @facter_machine_name %>' >> /etc/environment
+export FACTER_MACHINE_TYPE=<%= @facter_machine_type %>
+export FACTER_ENV_NAME=<%= @facter_env_name %>
+export FACTER_MACHINE_NAME=<%= @facter_machine_name %>
+
+
+pushd /tmp
+
+apt-get -y update
+apt-get -y install python-software-properties
+apt-add-repository -y ppa:brightbox/ruby-ng
+apt-get -y update
+apt-get -y install ruby2.0 ruby2.0-dev
+apt-add-repository -y --remove ppa:brightbox/ruby-ng
+
+ln -fs /usr/bin/ruby2.0 /usr/bin/ruby
+ln -fs /usr/bin/gem2.0 /usr/bin/gem
+
+# download and install puppet
+wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb
+dpkg -i puppetlabs-release-precise.deb
+apt-get update
+apt-get -y --force-yes install puppet-common=3.7.5-1puppetlabs1 puppet=3.7.5-1puppetlabs1
+
+RUN_PUPPET_SCRIPT="$( cat <<EOF
+#!/usr/bin/env bash
+
+set -e
+set -v
+# Get the latest promoted versions of data and config
+config_version=\`curl -u puppet:<%= @puppet_password %> https://cd.recruiterbox.com/job/Promote_To_Production/lastSuccessfulBuild/artifact/config-version.txt\`
+data_version=\`curl -u puppet:<%= @puppet_password %> https://cd.recruiterbox.com/job/Promote_To_Production/lastSuccessfulBuild/artifact/data-version.txt\`
+
+# get the latest promoted data package
+DATA_ARTIFACT_URL="https://cd.recruiterbox.com/job/Build_Data/\$data_version/artifact/recruiterbox-data.tar.gz"
+pushd /tmp
+wget --quiet --auth-no-challenge --http-user=puppet --http-password=<%= @puppet_password %> \$DATA_ARTIFACT_URL
+mkdir -p recruiterbox-data
+mv recruiterbox-data.tar.gz recruiterbox-data
+pushd recruiterbox-data
+tar -xf recruiterbox-data.tar.gz
+puppet apply --modulepath modules manifests/site.pp
+
+popd
+# get the latest promoted config package
+ARTIFACT_URL="https://cd.recruiterbox.com/job/Build_Config/\$config_version/artifact/recruiterbox-config.tar.gz"
+
+wget --quiet --auth-no-challenge --http-user=puppet --http-password=<%= @puppet_password %> \$ARTIFACT_URL
+mkdir -p recruiterbox-config
+mv recruiterbox-config.tar.gz recruiterbox-config
+pushd recruiterbox-config
+tar -xf recruiterbox-config.tar.gz
+cp hiera/default.json /etc/recruiterbox/hiera/
+
+set +e
+puppet apply --modulepath modules --hiera_config=hiera/hiera.yaml manifests/site.pp --detailed-exitcodes
+PUPPET_EXIT_CODE=\$?
+echo \$PUPPET_EXIT_CODE
+
+
+if [ \$PUPPET_EXIT_CODE == 0 ] || [ \$PUPPET_EXIT_CODE ==  2 ]
+then
+    exit 0
+else
+    exit \$PUPPET_EXIT_CODE
+fi
+
+
+EOF
+)"
+
+echo -e "$RUN_PUPPET_SCRIPT" > /usr/bin/run_puppet.sh
+chmod +x /usr/bin/run_puppet.sh
+run_puppet.sh > /opt/puppet.log 2>&1
+echo 'Puppet Run Successfully completed'>/var/log/machine_spinup_success.log

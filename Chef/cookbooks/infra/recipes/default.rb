@@ -30,7 +30,8 @@ ssh_user_name         = infra_config['ssh_user_name']
 with_machine_options(
   convergence_options: {
     ssl_verify_mode: :verify_none,
-    install_sh_path: "~/chef-install.sh"
+    install_sh_path: "~/chef-install.sh",
+    chef_client_timeout: 120*120
   },
   bootstrap_options:  {
     image_id: image_id,
